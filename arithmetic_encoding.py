@@ -20,7 +20,6 @@ def arithmetic_encoding(message, precision=50):
 
     probabilities = calculate_probabilities(message)
     sorted_probabilities = dict(sorted(probabilities.items(), key=lambda item: item[1]))
-    print(f"Probabilities: {sorted_probabilities}")
 
     cumulative_prob = {}
     cumulative = Decimal(0)
@@ -58,5 +57,5 @@ message = input("Insert message to encode: ")
 (p, q), final_low, final_high = arithmetic_encoding(message)
 print("========")
 print(f"Encoded value: {p} / 2^{q}")
-print(f"Binary encoding: {p}\u2081\u2080 = {bin(p)[2:]}\u2082")
+print(f"Binary encoding: {p}\u2081\u2080 = {bin(p)[2:].zfill(q)}\u2082")
 print(f"Final range: [{final_low}, {final_high})")
