@@ -55,4 +55,5 @@ def arithmetic_encoding_debug(message, precision=50):
 message = "трембачантонинаандреевна"
 (p, q), final_range = arithmetic_encoding_debug(message)
 print(f"Encoded value: {p} / 2^{q}")
+print(f"Binary encoding: {p}\u2081\u2080 = {bin(p)[2:]}\u2082")
 print(f"Final range: {final_range}")
