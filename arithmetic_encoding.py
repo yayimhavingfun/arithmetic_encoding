@@ -1,4 +1,4 @@
-from decimal import Decimal, getcontext
+from decimal import Decimal, getcontext, InvalidOperation
 import math
 
 def calculate_probabilities(message):
@@ -19,7 +19,8 @@ def arithmetic_encoding(message, precision=50):
     getcontext().prec = precision
 
     probabilities = calculate_probabilities(message)
-    sorted_probabilities = dict(sorted(probabilities.items(), key=lambda item: (item[1], item[0])))
+    sorted_probabilities = dict(sorted(probabilities.items(), key=lambda item: item[1]))
+    print(f"Probabilities: {sorted_probabilities}")
 
     cumulative_prob = {}
     cumulative = Decimal(0)
@@ -36,11 +37,11 @@ def arithmetic_encoding(message, precision=50):
         range_width = high - low
         high = low + range_width * symbol_high
         low = low + range_width * symbol_low
-        print(f"{symbol}: {(float(low), float(high))}")
+        print(f"{symbol}: [{low}, {high})")
 
     # подсчет q и p
     range_width = high - low
-    q = -math.floor(math.log2(float(range_width)))
+    q = -math.floor(Decimal(range_width).log10() / Decimal(2).log10())
     p = math.floor(float(low) * (2**q))
 
     # убедимся что p/2^q находится в [0; 1)
@@ -50,12 +51,12 @@ def arithmetic_encoding(message, precision=50):
             break
         p += 1
 
-    return (p, q), (float(low), float(high))
+    return (p, q), low, high
 
 
 message = input("Insert message to encode: ")
-(p, q), final_range = arithmetic_encoding(message)
+(p, q), final_low, final_high = arithmetic_encoding(message)
 print("========")
 print(f"Encoded value: {p} / 2^{q}")
 print(f"Binary encoding: {p}\u2081\u2080 = {bin(p)[2:]}\u2082")
-print(f"Final range: {final_range}")
+print(f"Final range: [{final_low}, {final_high})")
