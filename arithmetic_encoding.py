@@ -38,20 +38,19 @@ def arithmetic_encoding(message, precision=50):
         low = low + range_width * symbol_low
         print(f"{symbol}: [{low}, {high})")
 
-    # подсчет q и p
+        # подсчет q и p
     range_width = high - low
-    q = -math.floor(Decimal(range_width).log10() / Decimal(2).log10())
-    p = math.floor(float(low) * (2**q))
+    q = -math.floor(math.log2(float(range_width)))
+    p = math.floor(float(low) * (2 ** q))
 
-    # убедимся что p/2^q находится в [0; 1)
+    # убедимся что p/2^q находится в [0, 1)
     while True:
-        encoded_value = Decimal(p) / Decimal(2**q)
+        encoded_value = Decimal(p) / Decimal(2 ** q)
         if low <= encoded_value < high:
             break
         p += 1
 
     return (p, q), low, high
-
 
 message = input("Insert message to encode: ")
 (p, q), final_low, final_high = arithmetic_encoding(message)
